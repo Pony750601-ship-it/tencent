@@ -1,0 +1,802 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>腾讯控股(00700.HK) 深度投资分析报告</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    background: #f5f6f8;
+    color: #1a1a1a;
+    margin: 0;
+    padding: 0;
+    line-height: 1.6;
+  }
+  .container {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 24px 16px;
+  }
+  .header {
+    background: linear-gradient(135deg, #1a2a4a 0%, #2d4a7a 100%);
+    color: white;
+    padding: 32px 24px;
+    border-radius: 12px;
+    margin-bottom: 24px;
+  }
+  .header h1 { margin: 0 0 8px 0; font-size: 24px; font-weight: 600; }
+  .header .subtitle { opacity: 0.85; font-size: 14px; }
+  .header .price-row {
+    display: flex;
+    align-items: baseline;
+    gap: 16px;
+    margin-top: 16px;
+    flex-wrap: wrap;
+  }
+  .header .price { font-size: 42px; font-weight: 700; }
+  .header .change { font-size: 18px; font-weight: 500; }
+  .header .change.up { color: #e24b4a; }
+  .header .change.down { color: #1D9E75; }
+  .tag {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 500;
+    margin-right: 8px;
+    margin-bottom: 8px;
+  }
+  .tag-buy { background: #eaf3de; color: #3B6D11; }
+  .tag-strong { background: #e1f5ee; color: #0F6E56; }
+  .tag-risk { background: #faece7; color: #993C1D; }
+  .tag-info { background: #e6f1fb; color: #185FA5; }
+
+  .card {
+    background: white;
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 20px;
+    border: 0.5px solid #e5e7eb;
+  }
+  .card h2 {
+    margin: 0 0 16px 0;
+    font-size: 18px;
+    font-weight: 600;
+    color: #1a2a4a;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #e5e7eb;
+  }
+  .card h3 {
+    margin: 20px 0 10px 0;
+    font-size: 15px;
+    font-weight: 600;
+    color: #374151;
+  }
+
+  .metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 12px;
+  }
+  .metric-box {
+    background: #f8f9fa;
+    border-radius: 8px;
+    padding: 14px;
+    text-align: center;
+  }
+  .metric-box .label {
+    font-size: 12px;
+    color: #6b7280;
+    margin-bottom: 6px;
+  }
+  .metric-box .value {
+    font-size: 20px;
+    font-weight: 600;
+    color: #1a1a1a;
+  }
+  .metric-box .value.positive { color: #e24b4a; }
+  .metric-box .value.negative { color: #1D9E75; }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    margin: 12px 0;
+  }
+  th, td {
+    padding: 10px 12px;
+    text-align: left;
+    border-bottom: 1px solid #e5e7eb;
+  }
+  th {
+    background: #f3f4f6;
+    font-weight: 600;
+    color: #374151;
+  }
+  tr:hover { background: #f9fafb; }
+  td.num { text-align: right; font-variant-numeric: tabular-nums; }
+
+  .recommendation-box {
+    background: #f0fdf4;
+    border: 1.5px solid #16a34a;
+    border-radius: 12px;
+    padding: 24px;
+    margin: 20px 0;
+  }
+  .recommendation-box .rec-title {
+    font-size: 22px;
+    font-weight: 700;
+    color: #15803d;
+    margin-bottom: 12px;
+  }
+  .rec-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 16px;
+    margin-top: 12px;
+  }
+  .rec-item {
+    background: white;
+    border-radius: 8px;
+    padding: 14px;
+  }
+  .rec-item .rec-label { font-size: 12px; color: #6b7280; margin-bottom: 4px; }
+  .rec-item .rec-value { font-size: 18px; font-weight: 600; color: #1a1a1a; }
+
+  .risk-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 12px;
+  }
+  .risk-item {
+    background: #fef2f2;
+    border-left: 4px solid #dc2626;
+    border-radius: 0 8px 8px 0;
+    padding: 14px;
+  }
+  .risk-item .risk-title { font-weight: 600; color: #991b1b; margin-bottom: 4px; }
+  .risk-item .risk-desc { font-size: 13px; color: #7f1d1d; }
+
+  .opportunity-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 12px;
+  }
+  .opp-item {
+    background: #f0fdf4;
+    border-left: 4px solid #16a34a;
+    border-radius: 0 8px 8px 0;
+    padding: 14px;
+  }
+  .opp-item .opp-title { font-weight: 600; color: #166534; margin-bottom: 4px; }
+  .opp-item .opp-desc { font-size: 13px; color: #3f6212; }
+
+  .chart-container {
+    position: relative;
+    width: 100%;
+    height: 320px;
+    margin: 16px 0;
+  }
+
+  .action-plan {
+    background: #eff6ff;
+    border: 1.5px solid #3b82f6;
+    border-radius: 12px;
+    padding: 20px;
+    margin: 16px 0;
+  }
+  .action-plan h3 { color: #1e40af; margin-top: 0; }
+  .action-step {
+    display: flex;
+    gap: 12px;
+    margin: 10px 0;
+    align-items: flex-start;
+  }
+  .step-num {
+    width: 28px;
+    height: 28px;
+    background: #3b82f6;
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    font-weight: 600;
+    flex-shrink: 0;
+  }
+  .step-content { flex: 1; font-size: 14px; }
+
+  .disclaimer {
+    background: #f3f4f6;
+    border-radius: 8px;
+    padding: 16px;
+    font-size: 12px;
+    color: #6b7280;
+    margin-top: 24px;
+  }
+
+  .progress-bar {
+    width: 100%;
+    height: 8px;
+    background: #e5e7eb;
+    border-radius: 4px;
+    overflow: hidden;
+    margin: 8px 0;
+  }
+  .progress-fill {
+    height: 100%;
+    border-radius: 4px;
+  }
+
+  .two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+  @media (max-width: 640px) {
+    .two-col { grid-template-columns: 1fr; }
+    .header .price { font-size: 32px; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- 报告头部 -->
+  <div class="header">
+    <h1>腾讯控股 (00700.HK)</h1>
+    <div class="subtitle">深度投资分析报告 | 2026年6月7日</div>
+    <div class="price-row">
+      <div class="price">453.20 HKD</div>
+      <div class="change down">-5.80 (-1.26%)</div>
+      <div style="opacity:0.8; font-size:13px;">市值 4.13万亿港元 | 换手率 0.35%</div>
+    </div>
+    <div style="margin-top:12px;">
+      <span class="tag tag-strong">强烈推荐买入</span>
+      <span class="tag tag-buy">目标价 580-620 HKD</span>
+      <span class="tag tag-risk">止损 410 HKD</span>
+      <span class="tag tag-info">预期收益 28%-37%</span>
+    </div>
+  </div>
+
+  <!-- 执行摘要 -->
+  <div class="card">
+    <h2>执行摘要</h2>
+    <p style="font-size:14px; color:#374151;">
+      腾讯控股当前股价<b>453.2港元</b>，处于52周区间（420.4-677.7港元）的<b>偏低位置</b>。
+      2025年全年营收达<b>8,323亿港元</b>（+16.7% YoY），净利润<b>2,489亿港元</b>（+18.8% YoY），
+      ROE高达<b>21.4%</b>，基本面极为扎实。当前PE(TTM)仅<b>15.5x</b>，处于近5年估值底部区间。
+    </p>
+    <p style="font-size:14px; color:#374151;">
+      <b>核心投资逻辑：</b>（1）AI战略加速落地，混元大模型、元宝智能体及腾讯云Token消耗连续多月翻倍；
+      （2）游戏业务展现惊人韧性，三款头部游戏收入均创历史新高；
+      （3）股息率持续提升（2025年末期息5.3港元），叠加持续回购，股东回报丰厚；
+      （4）48家机构中44家给予"买入"评级，共识目标价734.4港元，较现价溢价<b>62%</b>。
+    </p>
+    <div class="recommendation-box">
+      <div class="rec-title">综合评级：买入 (BUY)</div>
+      <div class="rec-grid">
+        <div class="rec-item">
+          <div class="rec-label">建议仓位</div>
+          <div class="rec-value">10-15%</div>
+        </div>
+        <div class="rec-item">
+          <div class="rec-label">建仓区间</div>
+          <div class="rec-value">430-460 HKD</div>
+        </div>
+        <div class="rec-item">
+          <div class="rec-label">目标价位</div>
+          <div class="rec-value">580-620 HKD</div>
+        </div>
+        <div class="rec-item">
+          <div class="rec-label">止损价位</div>
+          <div class="rec-value">410 HKD</div>
+        </div>
+        <div class="rec-item">
+          <div class="rec-label">风险等级</div>
+          <div class="rec-value">中等</div>
+        </div>
+        <div class="rec-item">
+          <div class="rec-label">投资期限</div>
+          <div class="rec-value">6-12个月</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 技术面分析 -->
+  <div class="card">
+    <h2>一、技术面分析</h2>
+    <div class="chart-container">
+      <canvas id="priceChart" role="img" aria-label="腾讯控股近3个月股价走势"></canvas>
+    </div>
+
+    <h3>关键技术指标（2026-06-05）</h3>
+    <div class="metrics-grid">
+      <div class="metric-box">
+        <div class="label">MA5</div>
+        <div class="value">459.24</div>
+      </div>
+      <div class="metric-box">
+        <div class="label">MA10</div>
+        <div class="value">446.32</div>
+      </div>
+      <div class="metric-box">
+        <div class="label">MA20</div>
+        <div class="value">450.62</div>
+      </div>
+      <div class="metric-box">
+        <div class="label">MA60</div>
+        <div class="value">483.40</div>
+      </div>
+      <div class="metric-box">
+        <div class="label">MACD柱</div>
+        <div class="value positive">+6.90</div>
+      </div>
+      <div class="metric-box">
+        <div class="label">RSI(6)</div>
+        <div class="value">50.86</div>
+      </div>
+      <div class="metric-box">
+        <div class="label">KDJ-J</div>
+        <div class="value">62.52</div>
+      </div>
+      <div class="metric-box">
+        <div class="label">布林带中轨</div>
+        <div class="value">450.62</div>
+      </div>
+    </div>
+
+    <h3>技术研判</h3>
+    <table>
+      <tr><th>指标</th><th>数值/状态</th><th>信号</th></tr>
+      <tr><td>均线系统</td><td>股价(453.2) &lt; MA5(459) &lt; MA20(451) &lt; MA60(483)</td><td>短期承压，中期偏弱</td></tr>
+      <tr><td>MACD</td><td>DIF=-5.46, DEA=-8.91, 柱状线=+6.90</td><td>低位金叉初期，动能转强</td></tr>
+      <tr><td>KDJ</td><td>K=53.0, D=48.2, J=62.5</td><td>中位金叉，尚未超买</td></tr>
+      <tr><td>RSI</td><td>6日=50.9, 12日=48.5, 24日=45.3</td><td>中性区域，无超买超卖</td></tr>
+      <tr><td>布林带</td><td>上轨479 / 中轨451 / 下轨422</td><td>股价在中轨附近，区间整理</td></tr>
+      <tr><td>52周位置</td><td>当前价距低点+7.8%，距高点-33.1%</td><td>处于历史低位区间</td></tr>
+    </table>
+
+    <p style="font-size:14px; color:#374151; margin-top:12px;">
+      <b>技术结论：</b>股价自3月高点（560+港元）回调至今，最大跌幅约19%，已在420-480港元区间形成震荡筑底格局。
+      6月2日单日大涨9.9%放量突破短期均线，虽然随后两日有所回调，但MACD在零轴下方形成金叉，
+      KDJ同步向上，显示短期底部特征明显。<b>430-460港元是较好的分批建仓区间。</b>
+    </p>
+  </div>
+
+  <!-- 基本面分析 -->
+  <div class="card">
+    <h2>二、基本面分析</h2>
+
+    <h3>核心财务数据</h3>
+    <div class="chart-container">
+      <canvas id="revenueChart" role="img" aria-label="腾讯控股营收与净利润趋势"></canvas>
+    </div>
+
+    <table>
+      <tr>
+        <th>指标</th>
+        <th>2022年</th>
+        <th>2023年</th>
+        <th>2024年</th>
+        <th>2025年</th>
+        <th>同比变化</th>
+      </tr>
+      <tr>
+        <td>营业收入（亿港元）</td>
+        <td class="num">5,545</td>
+        <td class="num">6,091</td>
+        <td class="num">7,130</td>
+        <td class="num">8,323</td>
+        <td class="num positive">+16.7%</td>
+      </tr>
+      <tr>
+        <td>净利润（亿港元）</td>
+        <td class="num">1,152</td>
+        <td class="num">1,572</td>
+        <td class="num">2,096</td>
+        <td class="num">2,489</td>
+        <td class="num positive">+18.8%</td>
+      </tr>
+      <tr>
+        <td>毛利率</td>
+        <td class="num">43.1%</td>
+        <td class="num">48.1%</td>
+        <td class="num">52.9%</td>
+        <td class="num">56.2%</td>
+        <td class="num positive">+3.3pp</td>
+      </tr>
+      <tr>
+        <td>净利率</td>
+        <td class="num">20.8%</td>
+        <td class="num">25.8%</td>
+        <td class="num">29.4%</td>
+        <td class="num">29.9%</td>
+        <td class="num positive">+0.5pp</td>
+      </tr>
+      <tr>
+        <td>ROE</td>
+        <td class="num">16.6%</td>
+        <td class="num">16.6%</td>
+        <td class="num">21.6%</td>
+        <td class="num">21.4%</td>
+        <td class="num negative">-0.2pp</td>
+      </tr>
+      <tr>
+        <td>每股收益（港元）</td>
+        <td class="num">12.6</td>
+        <td class="num">16.6</td>
+        <td class="num">22.6</td>
+        <td class="num">27.4</td>
+        <td class="num positive">+21.2%</td>
+      </tr>
+    </table>
+
+    <h3>业务结构（2025年全年）</h3>
+    <div class="chart-container" style="height:260px;">
+      <canvas id="segmentChart" role="img" aria-label="腾讯控股业务结构占比"></canvas>
+    </div>
+    <table>
+      <tr><th>业务板块</th><th>营收（亿港元）</th><th>占比</th><th>核心看点</th></tr>
+      <tr><td>增值服务</td><td class="num">4,088</td><td class="num">49.1%</td><td>三款头部游戏收入创新高，长青游戏表现稳健</td></tr>
+      <tr><td>金融科技及企业服务</td><td class="num">2,540</td><td class="num">30.5%</td><td>腾讯云Token消耗连续多月翻倍，AI驱动增长</td></tr>
+      <tr><td>营销服务</td><td class="num">1,605</td><td class="num">19.3%</td><td>视频号广告增长强劲，AI赋能精准投放</td></tr>
+      <tr><td>其他</td><td class="num">89</td><td class="num">1.1%</td><td>投资及内容授权</td></tr>
+    </table>
+
+    <h3>估值分析</h3>
+    <div class="two-col">
+      <div>
+        <table>
+          <tr><th>估值指标</th><th>当前值</th><th>历史分位</th></tr>
+          <tr><td>PE(TTM)</td><td class="num">15.5x</td><td class="num">低位</td></tr>
+          <tr><td>PE(Forward)</td><td class="num">15.7x</td><td class="num">低位</td></tr>
+          <tr><td>PB</td><td class="num">3.26x</td><td class="num">中低位</td></tr>
+          <tr><td>PS(TTM)</td><td class="num">4.75x</td><td class="num">中低位</td></tr>
+          <tr><td>股息率(TTM)</td><td class="num">1.17%</td><td class="num">提升中</td></tr>
+        </table>
+      </div>
+      <div>
+        <p style="font-size:14px; color:#374151;">
+          <b>估值结论：</b>当前15.5x PE处于近5年低位区间（历史中枢约20-25x）。
+          若按2026年预期EPS约33港元、给予18-20x PE，合理估值为<b>594-660港元</b>。
+          若AI商业化超预期，估值可修复至22x以上，对应<b>726港元+</b>。
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 市场情绪 -->
+  <div class="card">
+    <h2>三、市场情绪与机构观点</h2>
+
+    <h3>机构评级汇总</h3>
+    <div class="metrics-grid">
+      <div class="metric-box">
+        <div class="label">覆盖机构数</div>
+        <div class="value">48家</div>
+      </div>
+      <div class="metric-box">
+        <div class="label">买入评级</div>
+        <div class="value positive">44家</div>
+      </div>
+      <div class="metric-box">
+        <div class="label">持有评级</div>
+        <div class="value">2家</div>
+      </div>
+      <div class="metric-box">
+        <div class="label">卖出评级</div>
+        <div class="value negative">1家</div>
+      </div>
+      <div class="metric-box">
+        <div class="label">共识目标价</div>
+        <div class="value">734.4 HKD</div>
+      </div>
+      <div class="metric-box">
+        <div class="label">潜在涨幅</div>
+        <div class="value positive">+62%</div>
+      </div>
+    </div>
+
+    <h3>近期研报核心观点</h3>
+    <table>
+      <tr><th>机构</th><th>日期</th><th>评级</th><th>核心观点</th></tr>
+      <tr><td>长城证券</td><td>2026-05-27</td><td>买入</td><td>游戏递延收入有望逐步释放，持续加大AI投入</td></tr>
+      <tr><td>第一上海</td><td>2026-05-26</td><td>买入</td><td>AI应用多场景实现商业化兑现，筑牢智慧体生态</td></tr>
+      <tr><td>华安证券</td><td>2026-05-18</td><td>买入</td><td>AI赋能核心业务增长，模型及AI产品表现亮眼</td></tr>
+      <tr><td>东吴证券</td><td>2026-05-18</td><td>买入</td><td>核心业务韧性延续，AI投入持续加码</td></tr>
+      <tr><td>国泰海通</td><td>2026-05-17</td><td>买入</td><td>AI投资筑基未来，核心业务韧性凸显</td></tr>
+    </table>
+
+    <h3>资金流向</h3>
+    <table>
+      <tr><th>资金类型</th><th>数据</th><th>解读</th></tr>
+      <tr><td>南下资金持仓</td><td>10.58亿股（11.61%）</td><td>内地资金持续布局，季度小幅减持329万股</td></tr>
+      <tr><td>机构持仓占比</td><td>46.69%（838家机构）</td><td>机构持仓稳定，Q2小幅减持</td></tr>
+      <tr><td>大股东Prosus</td><td>20.80亿股（23.09%）</td><td>减持压力是长期压制估值的因素</td></tr>
+      <tr><td>6月5日主力资金</td><td>净流出5.21亿港元</td><td>短期获利盘流出，不影响中长期趋势</td></tr>
+      <tr><td>卖空比例</td><td>14.72%</td><td>卖空处于正常水平，未出现极端做空</td></tr>
+    </table>
+  </div>
+
+  <!-- 风险与机会 -->
+  <div class="card">
+    <h2>四、风险评估</h2>
+    <div class="risk-grid">
+      <div class="risk-item">
+        <div class="risk-title">监管政策风险</div>
+        <div class="risk-desc">国内互联网行业监管仍存不确定性，游戏版号、数据安全、反垄断等政策可能影响业务节奏。风险等级：中高</div>
+      </div>
+      <div class="risk-item">
+        <div class="risk-title">大股东减持压力</div>
+        <div class="risk-desc">Prosus持有23.09%股份，其减持计划是长期压制估值的核心因素。但减持节奏已较前几年明显放缓。风险等级：中</div>
+      </div>
+      <div class="risk-item">
+        <div class="risk-title">AI投资回报不确定</div>
+        <div class="risk-desc">腾讯在AI基础设施和研发上的巨额投入（CAPEX大幅增加）能否转化为可量化的商业回报仍需观察。风险等级：中</div>
+      </div>
+      <div class="risk-item">
+        <div class="risk-title">宏观经济与消费疲软</div>
+        <div class="risk-desc">广告和游戏业务受宏观经济和消费信心影响，若经济复苏不及预期，可能影响收入增长。风险等级：中</div>
+      </div>
+      <div class="risk-item">
+        <div class="risk-title">游戏出海竞争加剧</div>
+        <div class="risk-desc">全球游戏市场竞争激烈，腾讯海外游戏收入占比仍有提升空间但面临米哈游等强劲对手。风险等级：中低</div>
+      </div>
+      <div class="risk-item">
+        <div class="risk-title">地缘政治与汇率</div>
+        <div class="risk-desc">中美关系、港股流动性、人民币汇率波动可能影响外资持仓意愿和估值水平。风险等级：中</div>
+      </div>
+    </div>
+
+    <h2 style="margin-top:24px;">五、核心投资机会</h2>
+    <div class="opportunity-grid">
+      <div class="opp-item">
+        <div class="opp-title">AI商业化拐点已至</div>
+        <div class="opp-desc">混元大模型、元宝智能体、腾讯云Token消耗连续多月翻倍。AI正从"投入期"进入"产出期"，2026年有望成为AI收入放量元年。</div>
+      </div>
+      <div class="opp-item">
+        <div class="opp-title">游戏业务韧性超预期</div>
+        <div class="opp-desc">三款头部游戏收入均创历史新高，长青游戏生命周期管理能力强，新游储备丰富。游戏仍是现金牛中的现金牛。</div>
+      </div>
+      <div class="opp-item">
+        <div class="opp-title">估值处于历史低位</div>
+        <div class="opp-desc">PE仅15.5x，显著低于近5年中枢（20-25x）。股价从高点回调33%，风险收益比极具吸引力。</div>
+      </div>
+      <div class="opp-item">
+        <div class="opp-title">股东回报持续提升</div>
+        <div class="opp-desc">2025年末期息5.3港元（+17.8% YoY），叠加持续回购，股东回报力度不断加大。股息+回购收益率超3%。</div>
+      </div>
+      <div class="opp-item">
+        <div class="opp-title">视频号生态爆发</div>
+        <div class="opp-desc">视频号广告和电商业务快速增长，有望成为继朋友圈之后新的广告增长引擎，打开营销服务天花板。</div>
+      </div>
+      <div class="opp-item">
+        <div class="opp-title">金融科技稳健增长</div>
+        <div class="opp-desc">支付、理财、云服务等领域稳步扩张，AI驱动企业服务需求旺盛，金融科技板块仍有较大增长空间。</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 操作方案 -->
+  <div class="card">
+    <h2>六、具体操作方案</h2>
+
+    <div class="action-plan">
+      <h3>分批建仓策略（建议总仓位10-15%）</h3>
+      <div class="action-step">
+        <div class="step-num">1</div>
+        <div class="step-content">
+          <b>第一批建仓（3-5%仓位）</b><br>
+          价位：<b>450-460港元</b>（当前附近）<br>
+          逻辑：股价处于底部震荡区间，技术指标出现低位金叉，适合建立底仓。
+        </div>
+      </div>
+      <div class="action-step">
+        <div class="step-num">2</div>
+        <div class="step-content">
+          <b>第二批加仓（3-5%仓位）</b><br>
+          价位：<b>430-440港元</b>（回踩确认）或 <b>突破470港元</b>（趋势确认）<br>
+          逻辑：若回调至430附近是更佳买点；若直接向上突破470则确认反弹趋势。
+        </div>
+      </div>
+      <div class="action-step">
+        <div class="step-num">3</div>
+        <div class="step-content">
+          <b>第三批加仓（3-5%仓位）</b><br>
+          价位：<b>410-420港元</b>（极端低点）或 <b>站稳480港元</b>（突破MA60）<br>
+          逻辑：410是52周低点附近的关键支撑；若站上480则中期趋势反转。
+        </div>
+      </div>
+    </div>
+
+    <h3>目标与风控</h3>
+    <table>
+      <tr><th>项目</th><th>价格/条件</th><th>操作</th></tr>
+      <tr><td>短期目标</td><td>500-520港元</td><td>第一批减仓30%，锁定部分利润</td></tr>
+      <tr><td>中期目标</td><td>580-620港元</td><td>减仓至50%，保留核心仓位</td></tr>
+      <tr><td>长期目标</td><td>700+港元</td><td>视基本面决定是否继续持有</td></tr>
+      <tr><td>止损位</td><td>410港元（跌破52周低点）</td><td>清仓止损，亏损约9.5%</td></tr>
+      <tr><td>跟踪止损</td><td>股价跌破MA20且MACD死叉</td><td>减仓50%</td></tr>
+    </table>
+
+    <h3>关键跟踪指标</h3>
+    <ul style="font-size:14px; color:#374151;">
+      <li><b>季度财报：</b>关注游戏收入增速、AI相关收入（云、广告）、毛利率变化</li>
+      <li><b>AI进展：</b>混元大模型迭代、元宝DAU/MAU、腾讯云收入增速</li>
+      <li><b>股东动态：</b>Prosus减持节奏、公司回购力度、股息政策</li>
+      <li><b>宏观环境：</b>港股流动性、人民币汇率、中美关系、国内消费数据</li>
+      <li><b>竞争格局：</b>字节跳动、阿里、米哈游等竞品动态</li>
+    </ul>
+  </div>
+
+  <!-- 总结 -->
+  <div class="card">
+    <h2>七、投资结论</h2>
+    <p style="font-size:15px; color:#1a1a1a; line-height:1.8;">
+      腾讯控股是中国互联网领域最优质的资产之一，当前估值（15.5x PE）已充分反映了市场对监管、减持和宏观的悲观预期，
+      却未充分定价其AI战略转型、游戏业务韧性和股东回报提升的积极变化。
+    </p>
+    <p style="font-size:15px; color:#1a1a1a; line-height:1.8;">
+      <b>核心结论：</b>在当前450港元附近的价位，腾讯的风险收益比极具吸引力。
+      向下空间有限（52周低点420港元支撑强劲），向上空间可观（机构共识目标价734港元，+62%）。
+      建议投资者以<b>10-15%仓位</b>、<b>分批建仓</b>的方式参与，
+      止损设于<b>410港元</b>，中期目标<b>580-620港元</b>。
+    </p>
+    <div style="background:#f0fdf4; border-radius:8px; padding:16px; margin-top:16px;">
+      <div style="font-size:16px; font-weight:600; color:#166534; margin-bottom:8px;">一句话总结</div>
+      <div style="font-size:14px; color:#3f6212;">
+        "以15倍PE买入中国最好的互联网平台，AI转型正当时，股息回购护体，耐心等待估值修复。"
+      </div>
+    </div>
+  </div>
+
+  <div class="disclaimer">
+    <b>免责声明：</b>本报告仅供信息参考，不构成任何投资建议或邀约。所有数据来源于公开市场信息，可能存在延迟或不准确。
+    投资有风险，入市需谨慎。过往表现不代表未来收益。投资者应根据自身风险承受能力和投资目标独立做出决策，
+    必要时请咨询持牌投资顾问。本报告作者及平台不对因使用本报告而产生的任何损失承担责任。
+  </div>
+
+</div>
+
+<script>
+// 股价走势图
+const priceCtx = document.getElementById('priceChart').getContext('2d');
+const priceData = [
+  {d:'3/9',p:510.7},{d:'3/10',p:548.2},{d:'3/11',p:546.7},{d:'3/12',p:541.2},{d:'3/13',p:542.2},
+  {d:'3/16',p:553.2},{d:'3/17',p:544.7},{d:'3/18',p:545.2},{d:'3/19',p:507.7},{d:'3/20',p:502.7},
+  {d:'3/23',p:493.1},{d:'3/24',p:508.7},{d:'3/25',p:500.2},{d:'3/26',p:490.3},{d:'3/27',p:488.1},
+  {d:'3/30',p:476.3},{d:'3/31',p:478.7},{d:'4/1',p:491.3},{d:'4/2',p:483.9},{d:'4/8',p:502.7},
+  {d:'4/9',p:503.2},{d:'4/10',p:499.2},{d:'4/13',p:484.7},{d:'4/14',p:487.9},{d:'4/15',p:493.7},
+  {d:'4/16',p:511.7},{d:'4/17',p:505.2},{d:'4/20',p:517.2},{d:'4/21',p:513.7},{d:'4/22',p:498.7},
+  {d:'4/23',p:489.9},{d:'4/24',p:488.1},{d:'4/27',p:473.3},{d:'4/28',p:468.5},{d:'4/29',p:473.9},
+  {d:'4/30',p:462.5},{d:'5/4',p:467.7},{d:'5/5',p:466.9},{d:'5/6',p:457.7},{d:'5/7',p:472.1},
+  {d:'5/8',p:466.1},{d:'5/11',p:459.1},{d:'5/12',p:451.9},{d:'5/13',p:457.3},{d:'5/14',p:454.9},
+  {d:'5/15',p:456.4},{d:'5/18',p:449.2},{d:'5/19',p:460.0},{d:'5/20',p:455.2},{d:'5/21',p:439.0},
+  {d:'5/22',p:441.4},{d:'5/26',p:439.0},{d:'5/27',p:434.4},{d:'5/28',p:425.0},{d:'5/29',p:427.2},
+  {d:'6/1',p:436.0},{d:'6/2',p:481.6},{d:'6/3',p:466.4},{d:'6/4',p:459.0},{d:'6/5',p:453.2}
+];
+new Chart(priceCtx, {
+  type: 'line',
+  data: {
+    labels: priceData.map(x => x.d),
+    datasets: [{
+      label: '收盘价',
+      data: priceData.map(x => x.p),
+      borderColor: '#3266ad',
+      backgroundColor: 'rgba(50,102,173,0.08)',
+      borderWidth: 2,
+      fill: true,
+      tension: 0.3,
+      pointRadius: 0,
+      pointHoverRadius: 5
+    }, {
+      label: '52周低点',
+      data: priceData.map(() => 420.4),
+      borderColor: '#dc2626',
+      borderWidth: 1,
+      borderDash: [5,5],
+      pointRadius: 0,
+      fill: false
+    }, {
+      label: '买入区间上限',
+      data: priceData.map(() => 460),
+      borderColor: '#16a34a',
+      borderWidth: 1,
+      borderDash: [3,3],
+      pointRadius: 0,
+      fill: false
+    }]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    interaction: { mode: 'index', intersect: false },
+    plugins: {
+      legend: { display: true, position: 'top', labels: { font: { size: 12 } } },
+      tooltip: {
+        callbacks: {
+          label: function(context) {
+            return context.dataset.label + ': ' + context.parsed.y.toFixed(2) + ' HKD';
+          }
+        }
+      }
+    },
+    scales: {
+      x: { ticks: { maxTicksLimit: 12, font: { size: 11 } }, grid: { display: false } },
+      y: {
+        min: 400, max: 580,
+        ticks: { font: { size: 11 } },
+        grid: { color: '#f0f0f0' }
+      }
+    }
+  }
+});
+
+// 营收与净利润趋势图
+const revCtx = document.getElementById('revenueChart').getContext('2d');
+new Chart(revCtx, {
+  type: 'bar',
+  data: {
+    labels: ['2022年', '2023年', '2024年', '2025年'],
+    datasets: [{
+      label: '营业收入（亿港元）',
+      data: [5545, 6091, 7130, 8323],
+      backgroundColor: '#3266ad',
+      borderRadius: 6,
+      yAxisID: 'y'
+    }, {
+      label: '净利润（亿港元）',
+      data: [1152, 1572, 2096, 2489],
+      backgroundColor: '#1D9E75',
+      borderRadius: 6,
+      yAxisID: 'y'
+    }]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: { display: true, position: 'top', labels: { font: { size: 12 } } }
+    },
+    scales: {
+      x: { grid: { display: false } },
+      y: {
+        position: 'left',
+        ticks: { font: { size: 11 } },
+        grid: { color: '#f0f0f0' }
+      }
+    }
+  }
+});
+
+// 业务结构饼图
+const segCtx = document.getElementById('segmentChart').getContext('2d');
+new Chart(segCtx, {
+  type: 'doughnut',
+  data: {
+    labels: ['增值服务 49.1%', '金融科技及企业服务 30.5%', '营销服务 19.3%', '其他 1.1%'],
+    datasets: [{
+      data: [49.1, 30.5, 19.3, 1.1],
+      backgroundColor: ['#3266ad', '#1D9E75', '#D85A30', '#888780'],
+      borderWidth: 2,
+      borderColor: '#fff'
+    }]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    cutout: '55%',
+    plugins: {
+      legend: { position: 'right', labels: { font: { size: 12 }, boxWidth: 16 } }
+    }
+  }
+});
+</script>
+</body>
+</html>
